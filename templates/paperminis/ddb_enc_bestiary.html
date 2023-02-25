@@ -18,14 +18,11 @@
             });
         {% endfor %}
     </script>
-    <div class="alert alert-warning" role="alert">
-      The DDB Importer only fully imports SRD Monsters. Non-SRD monsters get cropped unless you added them to your creature collection already.<br>
-        If a creature with the same name is already in your collection, it will take your creature settings instead of those from DDB.
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <p>The DDB Importer only fully imports SRD Monsters. Non-SRD monsters get cropped unless you added them to your creature collection already.</p>
+        <p>If a creature with the same name is already in your collection, it will take your creature settings instead of those from DDB.</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-
     <div class="row">
         <div class="col-md-8">
             <div class="card col-md-8 bg-light mx-auto pull-right">
@@ -46,7 +43,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12 mt-2">
-                                <button type="submit" class="btn btn-basic btn-fill btn-block">Create Bestiary!</button>
+                                <button type="submit" class="btn btn-success">Create Bestiary!</button>
                             </div>
                         </div>
                         &nbsp;&nbsp;

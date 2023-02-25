@@ -1,30 +1,10 @@
 {% extends "base_generic.html" %}
 {% block content %}
-    <script>
-        jQuery(document).ready(function($) {
-            $('#print_form').one('submit', function() {
-                $(this).find('input[type="submit"]').attr('disabled','disabled');
-            });
-        });
-    </script>
+
     {% load widget_tweaks %}
     {% load auth_extras %}
     {% if form.non_field_errors %}
-        <script>
-            $.notify({
-                message: '{{ form.non_field_errors }}'
-            },{
-                type: 'danger',
-                delay: 10000
-            },{
-                animate: {
-                    enter: 'animated fadeInRight',
-                    exit: 'animated fadeOutRight'
-                }
-            });
 
-
-        </script>
     {% endif %}
     <form name="print" id="print_form" action="" method="post">
         {% csrf_token %}
@@ -41,33 +21,33 @@
                             <div class="form-group">
                                 {{ form.paper_format.errors }}
                                 <label for="{{ form.paper_format.id_for_label }}">Paper Format: </label>
-                                {% render_field form.paper_format class+="form-control" %}
+                                {% render_field form.paper_format class+="form-select" %}
                                 <small class="form-text text-muted"><strong>Note</strong>: If you have Huge or Gargantuan creatures, paper formats like A3 or Tabloid will print them larger and more appropriate.</small>
                             </div>
                             <div class="form-group">
                                 {{ form.grid_size.errors }}
                                 <label for="{{ form.grid_size.id_for_label }}">Grid Size:</label>
-                                {% render_field form.grid_size class+="form-control" %}
+                                {% render_field form.grid_size class+="form-select" %}
                             </div>
                             <div class="form-group">
                                 {{ form.base_shape.errors }}
                                 <label for="{{ form.base_shape.id_for_label }}">Base Shape:</label>
-                                {% render_field form.base_shape class+="form-control" %}
+                                {% render_field form.base_shape class+="form-select" %}
                             </div>
                             <div class="form-group">
                                 {{ form.force_name.errors }}
                                 <label for="{{ form.force_name.id_for_label }}">Print all names, print no names or leave it to the creature settings</label>
-                                {% render_field form.force_name class+="form-control" %}
+                                {% render_field form.force_name class+="form-select" %}
                             </div>
-                            <div class="form-group">
+                            <div class="form-check form-switch">
                                 {{ form.enumerate.errors }}
                                 <label for="{{ form.enumerate.id_for_label }}">Add numbers to the base of minis where you have more than one?</label>
-                                {% render_field form.enumerate class+="form-control" %}
+                                {% render_field form.enumerate class+="form-control form-check-input" role="switch" %}
                             </div>
-                            <div class="form-group">
+                            <div class="form-check form-switch">
                                 {{ form.fixed_height.errors }}
                                 <label for="{{ form.fixed_height.id_for_label }}">Use fixed height for minis of the same size category?</label>
-                                {% render_field form.fixed_height class+="form-control" %}
+                                {% render_field form.fixed_height class+="form-control form-check-input" role="switch" %}
                             </div>
                             <div class="form-group">
                                 {{ form.darken.errors }}
@@ -102,4 +82,29 @@
             </div>
         </div>
     </form>
+{% endblock %}
+
+{% block script_below_imports %}
+    <script>
+        jQuery(document).ready(function($) {
+            $('#print_form').one('submit', function() {
+                $(this).find('input[type="submit"]').attr('disabled','disabled');
+            });
+        });
+    </script>
+    <script>
+        $.notify({
+            message: '{{ form.non_field_errors }}'
+        },{
+            type: 'danger',
+            delay: 10000
+        },{
+            animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+            }
+        });
+
+
+    </script>
 {% endblock %}

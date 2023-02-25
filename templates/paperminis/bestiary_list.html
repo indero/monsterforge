@@ -14,15 +14,16 @@
                     <thead>
                         <th>Name</th>
                         <th>Number of creatures</th>
+                        <th class="text-end">Edit/Print</th>
                     </thead>
                     <tbody>
                         {% for bestiary in bestiary_list %}
-                        <tr class="clickable-row" data-href="{% url 'bestiary-detail' pk=bestiary.id %}">
+                        <tr>
                             <td>{{ bestiary.name }}</td>
                             <td>{% if bestiary.total_creatures == None %}0{% else %}{{ bestiary.total_creatures }}{% endif %}</td>
+                            <td class="text-end"><a class="btn btn-secondary" href="{% url 'bestiary-detail' pk=bestiary.id%}">View</a></td>
                         </tr>
                         {% endfor %}
-
                     </tbody>
                 </table>
                 {% else %}

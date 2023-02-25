@@ -1,46 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <script>
-        function creature_preview(e,url) {
-            if (!e) e = window.event;
-            var y = e.clientY;
-            var topdiv = document.getElementById('fixcard');
-            var div = document.getElementById('cpreview');
-            var rect1 = topdiv.getBoundingClientRect();
-            var rect2 = div.getBoundingClientRect();
-            var overlap = !(rect1.right < rect2.left ||
-                rect1.left > rect2.right ||
-                rect1.bottom < rect2.top ||
-                rect1.top > rect2.bottom)
-            img = document.getElementById('ipreview');
-            img.src = url;
-            div.style.visibility = "visible";
-            var abs_top = div.getBoundingClientRect().top
-            var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-            if (abs_top <= 0 && !overlap) {
-                div.style.position = "fixed";
-                div.style.top = "0px";
-            } else if (overlap){
-                div.style.position = "relative";
-            }
-        };
 
-        function empty_bestiary() {
-            $.notify({
-                message: 'Your bestiary is empty. You first have to LINK creatures to your bestiary.'
-            }, {
-                type: 'warning',
-                delay: 10000
-            }, {
-                animate: {
-                    enter: 'animated fadeInRight',
-                    exit: 'animated fadeOutRight'
-                }
-            });
-        };
-
-    </script>
     <div class="row">
         <div class="col-md-6">
             <div class="card strpied-tabled-with-hover">
@@ -53,16 +14,18 @@
                         <table class="table table-hover table-striped">
                             <thead>
                             <th scope="col" style="width: 10%">#</th>
-                            <th scope="col" style="width: 75%">Name</th>
+                            <th scope="col" style="width: 65%">Name</th>
                             <th scope="col" style="width: 10%">Size</th>
+                            <th scope="col" style="width: 10%">Edit</th>
                             <th scope="col" style="width: 5%"></th>
                             </thead>
                             <tbody>
                             {%  for  quantity_creature in bestiary.creaturequantity_set.all %}
-                                <tr class="clickable-row" data-href="{{ quantity_creature.creature.get_absolute_url }}" onmouseover="creature_preview(event,'{{ quantity_creature.creature.img_url }}')">
+                                <tr onmouseover="creature_preview(event,'{{ quantity_creature.creature.img_url }}')">
                                     <td>{{ quantity_creature.quantity }}</td>
                                     <td>{{ quantity_creature.creature.name }}</td>
                                     <td>{{ quantity_creature.creature.size }}</td>
+                                    <td><a class="btn btn-secondary btn-sm" href="{{ quantity_creature.creature.get_absolute_url }}">View</a>
                                     <td>
                                         <form id="remove{{ quantity_creature.creature.id }}" name="test" action="{% url 'bestiary-unlink' pk=bestiary.id ci=quantity_creature.creature.id %}" method="POST">
                                             {% csrf_token %}
@@ -104,7 +67,8 @@
                         </div>
                         <div class="row mt-4 mb-3">
                             <div class="col-sm-12 text-center">
-                                <a id="print_link" href="{% if bestiary.creatures.count > 0 %}{% url 'bestiary-print' pk=bestiary.id %}{% else %}javascript:empty_bestiary();{% endif %}" class="btn btn-success active btn-block" role="button" aria-pressed="true">Generate Minis for this Bestiary!</a>
+{#                                <a id="print_link" href="{% if bestiary.creatures.count > 0 %}{% url 'bestiary-print' pk=bestiary.id %}{% else %}javascript:empty_bestiary();{% endif %}" class="btn btn-success active btn-block" role="button" aria-pressed="true">Generate Minis for this Bestiary!</a>#}
+                                <a id="print_link" href="{% if bestiary.creatures.count > 0 %}{% url 'bestiary-print' pk=bestiary.id %} {% else %} # {% endif %}" {% if bestiary.creatures.count == 0 %} id="liveToastBtn" {% endif %} class="btn btn-success active btn-block" role="button" aria-pressed="true">Generate Minis for this Bestiary!</a>
                             </div>
                         </div>
                     </div>
@@ -119,4 +83,69 @@
             </div>
         </div>
     </div>
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                {#                                      <img src="..." class="rounded me-2" alt="...">#}
+                <strong class="me-auto">Monsterforge</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Your bestiary is empty. You first have to LINK creatures to your bestiary.
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script_below_imports%}
+    <script>
+        function creature_preview(e,url) {
+            if (!e) e = window.event;
+            var y = e.clientY;
+            var topdiv = document.getElementById('fixcard');
+            var div = document.getElementById('cpreview');
+            var rect1 = topdiv.getBoundingClientRect();
+            var rect2 = div.getBoundingClientRect();
+            var overlap = !(rect1.right < rect2.left ||
+                rect1.left > rect2.right ||
+                rect1.bottom < rect2.top ||
+                rect1.top > rect2.bottom)
+            img = document.getElementById('ipreview');
+            img.src = url;
+            div.style.visibility = "visible";
+            var abs_top = div.getBoundingClientRect().top
+            var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+            if (abs_top <= 0 && !overlap) {
+                div.style.position = "fixed";
+                div.style.top = "0px";
+            } else if (overlap){
+                div.style.position = "relative";
+            }
+        };
+
+        {#function empty_bestiary() {#}
+        {#    $.notify({#}
+        {#        message: 'Your bestiary is empty. You first have to LINK creatures to your bestiary.'#}
+        {#    }, {#}
+        {#        type: 'warning',#}
+        {#        delay: 10000#}
+        {#    }, {#}
+        {#        animate: {#}
+        {#            enter: 'animated fadeInRight',#}
+        {#            exit: 'animated fadeOutRight'#}
+        {#        }#}
+        {#    });#}
+        {#};#}
+
+        const toastTrigger = document.getElementById('print_link')
+        const toastLiveExample = document.getElementById('liveToast')
+        if (toastTrigger) {
+            toastTrigger.addEventListener('click', () => {
+                const toast = new bootstrap.Toast(toastLiveExample)
+
+                toast.show()
+            })
+        }
+    </script>
 {% endblock %}

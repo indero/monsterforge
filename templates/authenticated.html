@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% load static %}
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Hello, {{ user.get_username }}</h3>
+                <p>You currently have {{ creature_list.count }} Creatures and {{ bestiary_list.count }} Bestiaries</p>
+                <p>A Bestiary can be used as a Container for Cratures. A Creature can be in Multiple Bestiaries.</p>
+                <p> To start you can add a new B <p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
